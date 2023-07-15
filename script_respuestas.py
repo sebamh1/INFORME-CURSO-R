@@ -8,9 +8,9 @@ import pandas as pd
 # ------------------- PASO 2: SELECCIÓN DE DATA ------------------ #
 # Set de datos a utilizar:
 
-csv_path_fish_production = "Informe Final/aquaculture-farmed-fish-production.csv"
-csv_path_life_expec = "Informe Final/life-expectancy.csv"
-csv_path_pou = "Informe Final/prevalence-of-undernourishment.csv"
+csv_path_fish_production = "aquaculture-farmed-fish-production.csv"
+csv_path_life_expec = "life-expectancy.csv"
+csv_path_pou = "prevalence-of-undernourishment.csv"
 
 
 # ------------------- PASO 3: DATA WRANGLING ------------------ #
