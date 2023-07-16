@@ -34,7 +34,7 @@ print(df_3)
 """
 
 # JOINTS
-pd.set_option("display.max_rows", None)  # Show all rows
+pd.set_option("display.max_rows", 50)  # Show all rows
 """
 # Set display options to show all columns and rows
 pd.set_option("display.max_columns", 6)  # Show all columns
@@ -91,6 +91,9 @@ repeated_years = years_fp.intersection(years_le, years_pou)
 
 sorted_years = sorted(repeated_years)
 
+extract_year_1 = df_1.loc[df_1["Year"].isin(sorted_years)]
+extract_year_2 = df_2.loc[df_2["Year"].isin(sorted_years)]
+extract_year_3 = df_3.loc[df_3["Year"].isin(sorted_years)]
 
 # ------------------------------------------------------------------------ #
 # DATAFRAMES
@@ -105,19 +108,18 @@ fixed_df = df.drop(index=152)
 # print("Cantidad de países considerados en el set de datos le: ", num_unique_le)
 # print("Cantidad de países considerados en el set de datos pou: ", num_unique_pou)
 
-print(fixed_df)
+# print(fixed_df)
 
 # print(years_column_fp)
 # print(years_column_le)
 # print(years_column_pou)
 
-# print(sorted_years)
 
+print(sorted_years)
+
+print(extract_year_1)
+print(extract_year_2)
+print(extract_year_3)
 # print(repeated_years)
 # for year in sorted_years:
 #    print(count(year))
-
-"""
-for country in unique_countries:
-    print(country)
-"""
