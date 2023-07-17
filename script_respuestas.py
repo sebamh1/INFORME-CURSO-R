@@ -33,19 +33,12 @@ print(" ")
 print(df_3)
 """
 
-# JOINTS
-pd.set_option("display.max_rows", 50)  # Show all rows
-"""
+# Pandas Display Options ----------------------------------------------
 # Set display options to show all columns and rows
-pd.set_option("display.max_columns", 6)  # Show all columns
-pd.set_option("display.max_rows", 10)  # Show all rows
-pd.set_option("display.width", 10)  # Adjust the width of the display
+# pd.set_option("display.max_columns", 6)  # Show all columns
+# pd.set_option("display.max_rows", None)  # Show all rows
+# pd.set_option("display.width", 10)  # Adjust the width of the display
 
-inner_join = pd.merge(df_1, df_3, on="Year", how="inner").drop_duplicates()
-# inner_join_2 = pd.merge(inner_join, df_3, on="Year", how="inner")
-
-print(inner_join)
-"""
 
 # ------------------------------------------------------------------------ #
 # SELECCIÓN DE DATOS
@@ -81,6 +74,11 @@ countries_pou = set(unique_pou)
 repeated_countries = countries_fp.intersection(countries_le, countries_pou)
 
 sorted_countries = sorted(repeated_countries)
+sorted_countries.remove("World")
+
+extract_country_1 = df_1.loc[df_1["Entity"].isin(sorted_countries)]
+extract_country_2 = df_2.loc[df_2["Entity"].isin(sorted_countries)]
+extract_country_3 = df_3.loc[df_3["Entity"].isin(sorted_countries)]
 
 # Set de datos para intersectar y obtener solo los años presentes en los tres archivos csv
 years_fp = set(years_column_fp)
@@ -91,35 +89,73 @@ repeated_years = years_fp.intersection(years_le, years_pou)
 
 sorted_years = sorted(repeated_years)
 
+extract_year_1 = extract_country_1.loc[extract_country_1["Year"].isin(sorted_years)]
+extract_year_2 = extract_country_2.loc[extract_country_2["Year"].isin(sorted_years)]
+extract_year_3 = extract_country_3.loc[extract_country_3["Year"].isin(sorted_years)]
+
+extract_year_1 = extract_year_1.drop("Code", axis=1)
+extract_year_2 = extract_year_2.drop("Code", axis=1)
+extract_year_3 = extract_year_3.drop("Code", axis=1)
+
+extract_year_1 = extract_year_1.set_index("Year")
+extract_year_2 = extract_year_2.set_index("Year")
+extract_year_3 = extract_year_3.set_index("Year")
+
+"""
 extract_year_1 = df_1.loc[df_1["Year"].isin(sorted_years)]
 extract_year_2 = df_2.loc[df_2["Year"].isin(sorted_years)]
 extract_year_3 = df_3.loc[df_3["Year"].isin(sorted_years)]
+"""
+extract_year_1.to_csv("fp.csv", encoding="utf-8", index=False, sep=";")
+extract_year_2.to_csv("le.csv", encoding="utf-8", index=False, sep=";")
+extract_year_3.to_csv("pou.csv", encoding="utf-8", index=False, sep=";")
 
 # ------------------------------------------------------------------------ #
 # DATAFRAMES
 ## Crear un df con los países repetidos
-df = pd.DataFrame({"Country": list(sorted_countries)})
-fixed_df = df.drop(index=152)
+# fix_df = pd.DataFrame({"Country": list(sorted_countries)})
+
+# fixed_df = df.drop(index=152)
+
+# ------------------------------------------------------------------------ #
+# JOINTS
+"""
+inner_join = pd.merge(
+    extract_year_1, extract_year_2, on="Entity", how="inner"
+).drop_duplicates()
+# inner_join_2 = pd.merge(inner_join, df_3, on="Year", how="inner")
+# .drop_duplicates()
+"""
 
 # ------------------------------------------------------------------------ #
 # OUTPUTS
+# ------- Países
 # Imprimir el output
 # print("Cantidad de países considerados en el set de datos fp: ", num_unique_fp)
 # print("Cantidad de países considerados en el set de datos le: ", num_unique_le)
 # print("Cantidad de países considerados en el set de datos pou: ", num_unique_pou)
 
 # print(fixed_df)
+# print(sorted_countries)
 
+# ----- Años
 # print(years_column_fp)
 # print(years_column_le)
 # print(years_column_pou)
 
+# print(sorted_years)
 
-print(sorted_years)
+# ----- Data Frames
+# print(extract_country_1)
+# print(extract_country_2)
+# print(extract_country_3)
+
 
 print(extract_year_1)
 print(extract_year_2)
 print(extract_year_3)
-# print(repeated_years)
-# for year in sorted_years:
-#    print(count(year))
+
+
+# print(inner_join)
+# inner_join.describe()
+# print(inner_join.head(500))
