@@ -1,5 +1,6 @@
 # ------------------- LIBRERÍAS ------------------ #
 import pandas as pd
+from tabulate import tabulate
 
 
 # ------------------- PASO 1: ------------------ #
@@ -351,8 +352,17 @@ ordered_columns = [
 main_df = df_2001_2018_fp_le_pou.reindex(columns=ordered_columns)
 
 
-print(main_df)
+# print(main_df)
 
+table_data = main_df.values.tolist()
+
+# Get the column headers
+headers = main_df.columns.tolist()
+
+main_table = tabulate(table_data, headers=headers, tablefmt="plain")
+
+# Display the table
+print(main_table)
 
 # ------------------------------------------------------------------------ #
 # DATAFRAME
