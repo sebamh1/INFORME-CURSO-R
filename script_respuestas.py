@@ -35,7 +35,7 @@ print(df_3)
 
 # Pandas Display Options ----------------------------------------------
 # Set display options to show all columns and rows
-# pd.set_option("display.max_columns", 6)  # Show all columns
+pd.set_option("display.max_columns", 10)  # Show all columns
 # pd.set_option("display.max_rows", None)  # Show all rows
 # pd.set_option("display.width", 10)  # Adjust the width of the display
 
@@ -327,9 +327,33 @@ df_2018_pou = df_2018_pou.reset_index(drop=True)
 # print(df_2018_pou)
 
 df_2001_2018_fp_le = pd.merge(df_2018_fp, df_2018_le, on="Entity", how="inner")
+df_2001_2018_fp_le_pou = pd.merge(
+    df_2001_2018_fp_le, df_2018_pou, on="Entity", how="inner"
+)
 
 
-print(df_2001_2018_fp_le)
+# print(df_2001_2018_fp_le_pou)
+
+# Reordenar las columnas
+ordered_columns = [
+    "Entity",
+    "Year_x",
+    "Aquaculture production (metric tons)_x",
+    "Life expectancy at birth (historical)_x",
+    "Prevalence of undernourishment (% of population)_x",
+    "Year_y",
+    "Aquaculture production (metric tons)_y",
+    "Life expectancy at birth (historical)_y",
+    "Prevalence of undernourishment (% of population)_y",
+]
+
+
+main_df = df_2001_2018_fp_le_pou.reindex(columns=ordered_columns)
+
+
+print(main_df)
+
+
 # ------------------------------------------------------------------------ #
 # DATAFRAME
 ## Crear dataframes con los filtros aplicados
