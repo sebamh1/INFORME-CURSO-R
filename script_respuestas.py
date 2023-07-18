@@ -1,7 +1,8 @@
 # ------------------- LIBRERÍAS ------------------ #
 import pandas as pd
 from tabulate import tabulate
-
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
 
 # ------------------- PASO 1: ------------------ #
 # Pregunta de Investigación:
@@ -127,9 +128,9 @@ extract_year_1 = df_1.loc[df_1["Year"].isin(sorted_years)]
 extract_year_2 = df_2.loc[df_2["Year"].isin(sorted_years)]
 extract_year_3 = df_3.loc[df_3["Year"].isin(sorted_years)]
 """
-extract_year_1.to_csv("fp.csv", encoding="utf-8", index=False, sep=";")
-extract_year_2.to_csv("le.csv", encoding="utf-8", index=False, sep=";")
-extract_year_3.to_csv("pou.csv", encoding="utf-8", index=False, sep=";")
+# extract_year_1.to_csv("fp.csv", encoding="utf-8", index=False, sep=";")
+# extract_year_2.to_csv("le.csv", encoding="utf-8", index=False, sep=";")
+# extract_year_3.to_csv("pou.csv", encoding="utf-8", index=False, sep=";")
 
 """
 result = extract_year_1[extract_year_1["Year"] == 2003]
@@ -351,6 +352,20 @@ ordered_columns = [
 
 main_df = df_2001_2018_fp_le_pou.reindex(columns=ordered_columns)
 
+new_headers = [
+    "País",
+    "Año_x",
+    "Producción Acuícola_x (t)",
+    "Expectativa de Vida_x (años)",
+    "Tasa de desnutrición_x (%)",
+    "Año_y",
+    "Producción Acuícola_y (t)",
+    "Expectativa de Vida_y (años)",
+    "Tasa de desnutrición_y (%)",
+]
+main_df.columns = new_headers
+
+main_df = main_df.round(1)
 
 # print(main_df)
 
@@ -361,12 +376,266 @@ headers = main_df.columns.tolist()
 
 main_table = tabulate(table_data, headers=headers, tablefmt="plain")
 
+
+main_df.to_csv("main_df.csv", encoding="utf-8", index=False, sep=";")
+# print(main_df)
+
 # Display the table
-print(main_table)
+
+# print(main_table)
+
+
+# GRÁFICOS ------------------------------------------------------------
+
+# Filter the dataframe for the year 2001
+# df_2001 = main_df[main_df["Año_x"] == 2001]
+"""
+# Calculate the threshold for selecting the top 10% highest aquaculture production
+threshold = df_2001["Producción Acuícola_x (t)"].quantile(0.9)
+
+# Filter the dataframe for the top 10% highest aquaculture production
+top_10_percent = df_2001[df_2001["Producción Acuícola_x (t)"] >= threshold]
+
+# Set up the figure and axis
+fig, ax = plt.subplots()
+
+# Set a different scale for each variable on the Y-axis
+ax2 = ax.twinx()
+
+# Plot the bars for the variables
+top_10_percent.plot(
+    x="País",
+    y=[
+        "Producción Acuícola_x (t)",
+        "Expectativa de Vida_x (años)",
+        "Tasa de desnutrición_x (%)",
+    ],
+    kind="bar",
+    ax=ax,
+    position=1,
+    color=["blue", "green", "red"],
+    legend=False,
+)
+
+# Set the labels and title
+ax.set_ylabel("Aquaculture Production (t)", color="blue")
+ax2.set_ylabel("Life Expectancy (years)", color="green")
+ax.set_xlabel("Country")
+ax.set_title("Top 10% Countries in Aquaculture Production (Year 2001)")
+
+# Adjust the x-axis labels for readability
+plt.xticks(rotation=45, ha="right")
+
+# Show the plot
+plt.show()
+"""
+
+"""
+# Bottom 10% 2001 ------------------------
+# Calculate the threshold for selecting the top 10% lowest aquaculture production
+threshold = df_2001["Producción Acuícola_x (t)"].quantile(0.1)
+
+# Filter the dataframe for the top 10% lowest aquaculture production
+bottom_10_percent = df_2001[df_2001["Producción Acuícola_x (t)"] <= threshold]
+
+# Set up the figure and axis
+fig, ax = plt.subplots()
+
+# Set a different scale for each variable on the Y-axis
+ax2 = ax.twinx()
+
+# Plot the bars for the variables
+bottom_10_percent.plot(
+    x="País",
+    y=[
+        "Producción Acuícola_x (t)",
+        "Expectativa de Vida_x (años)",
+        "Tasa de desnutrición_x (%)",
+    ],
+    kind="bar",
+    ax=ax,
+    position=1,
+    color=["blue", "green", "red"],
+    legend=True,
+)
+
+# Set the labels and title
+ax.set_ylabel("Aquaculture Production (t)", color="blue")
+ax2.set_ylabel("Life Expectancy (years)", color="green")
+ax.set_xlabel("Country")
+ax.set_title("Top 10 Countries with Highest Aquaculture Production (Year 2001)")
+
+# Adjust the x-axis labels for readability
+plt.xticks(rotation=45, ha="right")
+
+# Show the plot
+plt.show()
+"""
+"""
+# 10% 2018 ------------------------
+
+# Filter the dataframe for the year 2018
+df_2018 = main_df[main_df["Año_y"] == 2018]
+
+# Calculate the threshold for selecting the top 10% higher aquaculture production
+threshold = df_2018["Producción Acuícola_y (t)"].quantile(0.1)
+
+# Filter the dataframe for the top 10% higher aquaculture production
+top_10_percent = df_2018[df_2018["Producción Acuícola_y (t)"] <= threshold]
+
+# Set up the figure and axis
+fig, ax = plt.subplots()
+
+# Set a different scale for each variable on the Y-axis
+ax2 = ax.twinx()
+
+# Plot the bars for the variables
+top_10_percent.plot(
+    x="País",
+    y=[
+        "Producción Acuícola_y (t)",
+        "Expectativa de Vida_y (años)",
+        "Tasa de desnutrición_y (%)",
+    ],
+    kind="bar",
+    ax=ax,
+    position=1,
+    color=["blue", "green", "red"],
+    legend=False,
+)
+
+# Set the labels and title
+ax.set_ylabel("Aquaculture Production (t)", color="blue")
+ax2.set_ylabel("Life Expectancy (years)", color="green")
+ax.set_xlabel("Country")
+ax.set_title("Top 10% Countries with Lowest Aquaculture Production (Year 2018)")
+
+# Adjust the x-axis labels for readability
+plt.xticks(rotation=45, ha="right")
+
+# Show the plot
+plt.show()
+
+"""
+
+df_2001 = main_df[main_df["Año_x"] == 2001]
+
+# Calculate the threshold values for top and bottom 10% of aquaculture production
+top_10_threshold = df_2001["Producción Acuícola_x (t)"].quantile(0.9)
+bottom_10_threshold = df_2001["Producción Acuícola_x (t)"].quantile(0.1)
+
+# Filter the dataframe for countries with top 10% and bottom 10% of aquaculture production
+top_10_countries = df_2001[df_2001["Producción Acuícola_x (t)"] >= top_10_threshold]
+bottom_10_countries = df_2001[
+    df_2001["Producción Acuícola_x (t)"] <= bottom_10_threshold
+]
+
+# Set up the figure and axis
+fig, ax = plt.subplots()
+
+# Set a different scale for each variable on the Y-axis
+ax2 = ax.twinx()
+ax3 = ax.twinx()
+
+# Plot the bars for the variables
+top_10_countries.plot(
+    x="País",
+    y=[
+        "Producción Acuícola_x (t)",
+        "Expectativa de Vida_x (años)",
+        "Tasa de desnutrición_x (%)",
+    ],
+    kind="bar",
+    ax=ax,
+    position=1,
+    color=["blue", "green", "red"],
+    legend=False,
+)
+
+bottom_10_countries.plot(
+    x="País",
+    y=[
+        "Producción Acuícola_x (t)",
+        "Expectativa de Vida_x (años)",
+        "Tasa de desnutrición_x (%)",
+    ],
+    kind="bar",
+    ax=ax2,
+    position=0,
+    color=["orange", "purple", "brown"],
+    legend=False,
+)
+
+# Set the labels and titles
+ax.set_ylabel("Aquaculture Production (t)", color="blue")
+ax2.set_ylabel("Life Expectancy (years) / Malnutrition Rate (%)", color="black")
+ax.set_xlabel("Country")
+ax.set_title(
+    "Comparison of Variables for Top and Bottom 10% of Aquaculture Production (Year 2001)"
+)
+
+# Adjust the spines to separate the scales
+ax2.spines["right"].set_position(("outward", 60))
+ax3.spines["right"].set_position(("outward", 120))
+
+# Hide the unwanted ticks
+ax3.yaxis.set_ticks([])
+
+# Show the plot
+plt.show()
+
+"""
+# Calculate the threshold for the highest and lowest 10% of aquaculture production
+threshold = main_df["Producción Acuícola_x (t)"].quantile([0.05, 0.95])
+
+# Filter the data for countries with production above the 90th percentile or below the 10th percentile
+df_filtered = main_df[
+    main_df["Producción Acuícola_x (t)"].between(threshold.iloc[0], threshold.iloc[1])
+]
+
+# Plot the bar chart
+plt.figure(figsize=(10, 6))
+plt.bar(
+    df_filtered["País"],
+    df_filtered["Producción Acuícola_x (t)"],
+    label="Production Acuicola",
+    color="blue",
+)
+plt.bar(
+    df_filtered["País"],
+    df_filtered["Expectativa de Vida_x (años)"],
+    label="Expectativa de Vida",
+    color="green",
+)
+plt.bar(
+    df_filtered["País"],
+    df_filtered["Tasa de desnutrición_x (%)"],
+    label="Tasa de desnutricion",
+    color="red",
+)
+
+# Set the labels and title
+plt.xlabel("Países")
+plt.ylabel("Valores")
+plt.title(
+    "Comparison of Production Acuicola, Expectativa de Vida, and Tasa de desnutricion for selected countries"
+)
+
+# Rotate the x-axis labels for better visibility
+plt.xticks(rotation=90)
+
+# Add a legend
+plt.legend()
+
+# Show the plot
+plt.show()
+"""
+
 
 # ------------------------------------------------------------------------ #
 # DATAFRAME
 ## Crear dataframes con los filtros aplicados
+"""
 concat_df_2016 = pd.concat([fp_2016, le_2016], axis=1)
 concat_df_2016 = pd.concat([concat_df_2016, pou_2016], axis=1)
 
@@ -375,7 +644,7 @@ concat_df_2017 = pd.concat([concat_df_2017, pou_2017], axis=1)
 
 concat_df_2018 = pd.concat([fp_2018, le_2018], axis=1)
 concat_df_2018 = pd.concat([concat_df_2018, pou_2018], axis=1)
-
+"""
 """
 print(concat_df_2016)
 print()
